@@ -30,11 +30,11 @@ jobs:
 
 `@v0` follows the newest 0.x release. To take changes only when you
 choose to, pin a full commit SHA and keep the version as a comment, for example
-`uses: noru-tech/noru-ci-action@<commit-sha> # v0.10.0`. Resolve the commit a release tag points
+`uses: noru-tech/noru-ci-action@<commit-sha> # v0.11.0`. Resolve the commit a release tag points
 at with:
 
 ```bash
-git ls-remote https://github.com/noru-tech/noru-ci-action 'refs/tags/v0.10.0^{}'
+git ls-remote https://github.com/noru-tech/noru-ci-action 'refs/tags/v0.11.0^{}'
 ```
 
 ## Permissions
@@ -51,8 +51,8 @@ The default steps (scan, validate, expiry, policy) only read the checkout: no ne
 > `scripts/publish_actions.py` on every release: do not edit it here, changes land upstream
 > and the next release overwrites this tree. Issues: https://github.com/noru-tech/noru-grc-engineering/issues
 >
-> `uses: noru-tech/noru-ci-action@v0.10.0` and
-> `uses: noru-tech/noru-grc-engineering/.github/actions/noru-ci@v0.10.0`
+> `uses: noru-tech/noru-ci-action@v0.11.0` and
+> `uses: noru-tech/noru-grc-engineering/.github/actions/noru-ci@v0.11.0`
 > are the same code at the same version. The toolkit the action runs (`scripts/`,
 > `plugins/`, `contract/`) is copied verbatim from that tag. `@v0`
 > follows the newest 0.x release.
@@ -79,7 +79,7 @@ default mode needs no network and no credential, so it runs on a pull request fr
 
 Pieces you can run: `ai-inventory`, `privacy-datamap`, `iac-scan`, `change-control`,
 `evidence-push`, `governance-records`, `review-signoff`, `audit-pack`. What each one collects is in
-the [toolkit README](https://github.com/noru-tech/noru-grc-engineering/blob/v0.10.0/README.md#pieces).
+the [toolkit README](https://github.com/noru-tech/noru-grc-engineering/blob/v0.11.0/README.md#pieces).
 
 ## Usage
 
@@ -162,7 +162,7 @@ so give each call its own.
 ```
 
 The GitLab CI and plain-shell recipes, and the publication half that stays separate from the gate,
-are in [`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blob/v0.10.0/docs/ci-mode.md).
+are in [`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blob/v0.11.0/docs/ci-mode.md).
 
 ## Inputs
 
@@ -191,7 +191,7 @@ are in [`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blo
 | Output | Description |
 |---|---|
 | `status` | `pass`, `pass-with-warnings`, `warn`, `skipped`, `fail` or `error` |
-| `exit-code` | The orchestrator's exit code; the table is in [`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blob/v0.10.0/docs/ci-mode.md#exit-codes) |
+| `exit-code` | The orchestrator's exit code; the table is in [`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blob/v0.11.0/docs/ci-mode.md#exit-codes) |
 | `report` | Path to the JSON report |
 | `drift` | `true` when the committed manifest no longer matches the repository |
 | `expired` | Number of interpretations whose expiry has passed |
@@ -246,12 +246,12 @@ when you choose to, pin a release tag from
 SHA. `noru-tech/noru-ci-action@<tag>` — the path inside the source
 repository — is the same code at the same tag; the Marketplace repository is generated from it on
 every release. Every plugin and action in the toolkit shares one version number, listed in the
-[changelog](https://github.com/noru-tech/noru-grc-engineering/blob/v0.10.0/CHANGELOG.md).
+[changelog](https://github.com/noru-tech/noru-grc-engineering/blob/v0.11.0/CHANGELOG.md).
 
 ## Support and contributing
 
 The action is built and tested in
 [`noru-tech/noru-grc-engineering`](https://github.com/noru-tech/noru-grc-engineering), which
-also holds the [contribution guide](https://github.com/noru-tech/noru-grc-engineering/blob/v0.10.0/CONTRIBUTING.md) and the
-[security policy](https://github.com/noru-tech/noru-grc-engineering/blob/v0.10.0/SECURITY.md). Open issues and pull requests there, not in the
+also holds the [contribution guide](https://github.com/noru-tech/noru-grc-engineering/blob/v0.11.0/CONTRIBUTING.md) and the
+[security policy](https://github.com/noru-tech/noru-grc-engineering/blob/v0.11.0/SECURITY.md). Open issues and pull requests there, not in the
 Marketplace repository, whose tree is overwritten on every release.
