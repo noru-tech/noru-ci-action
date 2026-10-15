@@ -30,11 +30,11 @@ jobs:
 
 `@v0` follows the newest 0.x release. To take changes only when you
 choose to, pin a full commit SHA and keep the version as a comment, for example
-`uses: noru-tech/noru-ci-action@<commit-sha> # v0.14.0`. Resolve the commit a release tag points
+`uses: noru-tech/noru-ci-action@<commit-sha> # v0.15.0`. Resolve the commit a release tag points
 at with:
 
 ```bash
-git ls-remote https://github.com/noru-tech/noru-ci-action 'refs/tags/v0.14.0^{}'
+git ls-remote https://github.com/noru-tech/noru-ci-action 'refs/tags/v0.15.0^{}'
 ```
 
 ## Permissions
@@ -51,8 +51,8 @@ The default steps (scan, validate, expiry, policy) only read the checkout: no ne
 > `scripts/publish_actions.py` on every release: do not edit it here, changes land upstream
 > and the next release overwrites this tree. Issues: https://github.com/noru-tech/noru-grc-engineering/issues
 >
-> `uses: noru-tech/noru-ci-action@v0.14.0` and
-> `uses: noru-tech/noru-grc-engineering/.github/actions/noru-ci@v0.14.0`
+> `uses: noru-tech/noru-ci-action@v0.15.0` and
+> `uses: noru-tech/noru-grc-engineering/.github/actions/noru-ci@v0.15.0`
 > are the same code at the same version. The toolkit the action runs (`scripts/`,
 > `plugins/`, `contract/`) is copied verbatim from that tag. `@v0`
 > follows the newest 0.x release.
@@ -79,7 +79,7 @@ default mode needs no network and no credential, so it runs on a pull request fr
 
 Pieces you can run: `ai-inventory`, `dev-agents`, `privacy-datamap`, `iac-scan`, `findings-ingest`, `threat-model`, `change-control`,
 `evidence-push`, `governance-records`, `review-signoff`, `audit-pack`. What each one collects is in
-the [toolkit README](https://github.com/noru-tech/noru-grc-engineering/blob/v0.14.0/README.md#pieces).
+the [toolkit README](https://github.com/noru-tech/noru-grc-engineering/blob/v0.15.0/README.md#pieces).
 
 ## Usage
 
@@ -163,7 +163,7 @@ so give each call its own.
 
 The GitLab CI/CD component that does the same job (`templates/gitlab/noru-ci.yml`), the plain-shell
 recipe, and the publication half that stays separate from the gate, are in
-[`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blob/v0.14.0/docs/ci-mode.md).
+[`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blob/v0.15.0/docs/ci-mode.md).
 
 ## Inputs
 
@@ -173,6 +173,7 @@ recipe, and the publication half that stays separate from the gate, are in
 | `repo` | `.` | Path to the repository to check |
 | `mode` | `gate` | `gate` fails on a finding; `warn` reports the same findings and exits `0` |
 | `steps` | `scan,validate,expiry,policy` | Add `diff` and `push`, or use `all`. The default needs no credential |
+| `trust-id` | *(empty)* | A Noru CI trust record id. The job exchanges its OIDC ID token for a 15-minute token with only the piece's scopes, instead of using `NORU_API_KEY`. Needs `permissions: id-token: write` |
 | `fail-on` | *(tool default)* | Which finding kinds gate the build, or `none` |
 | `baseline` | `.noru/privacy-baseline.yml` | The agreed privacy taxonomy for the policy step. Absent file: step skipped. Explicit path that does not exist: tooling failure |
 | `base-ref` | *(none)* | Compare against the merge base with this ref, so a finding says whether this pull request introduced it. Needs `fetch-depth: 0` |
@@ -192,7 +193,7 @@ recipe, and the publication half that stays separate from the gate, are in
 | Output | Description |
 |---|---|
 | `status` | `pass`, `pass-with-warnings`, `warn`, `skipped`, `fail` or `error` |
-| `exit-code` | The orchestrator's exit code; the table is in [`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blob/v0.14.0/docs/ci-mode.md#exit-codes) |
+| `exit-code` | The orchestrator's exit code; the table is in [`docs/ci-mode.md`](https://github.com/noru-tech/noru-grc-engineering/blob/v0.15.0/docs/ci-mode.md#exit-codes) |
 | `report` | Path to the JSON report |
 | `drift` | `true` when the committed manifest no longer matches the repository |
 | `expired` | Number of interpretations whose expiry has passed |
@@ -236,6 +237,12 @@ Never pass a key as a `with:` input. The default steps need none. For the opt-in
 publication, put `NORU_API_KEY` in the job or step `env:` from a secret, only in a job that has
 secrets and never on `pull_request` from a fork. The action never reads the value; it checks only
 whether the variable is present, and the piece's own push entrypoint reads it at the point of use.
+
+Or store no key at all: create a CI trust record in Noru (Settings, Developer, CI trust) for the
+repository and the refs that may write, give the job `permissions: id-token: write`, and pass the
+record's id as `trust-id`. The job then exchanges its OIDC ID token, once, for a token that lasts 15
+minutes and carries only the piece's scopes; when both are present the trust record wins. Never give
+`id-token: write` to a `pull_request_target` job. See [CI mode](https://github.com/noru-tech/noru-grc-engineering/blob/v0.15.0/docs/ci-mode.md#without-a-stored-key-a-ci-trust-record).
 MCP-backed pieces cannot push from this headless runner at all; the action reports their plan and
 never claims an emitted call list as an executed write.
 
@@ -247,12 +254,12 @@ when you choose to, pin a release tag from
 SHA. `noru-tech/noru-ci-action@<tag>` — the path inside the source
 repository — is the same code at the same tag; the Marketplace repository is generated from it on
 every release. Every plugin and action in the toolkit shares one version number, listed in the
-[changelog](https://github.com/noru-tech/noru-grc-engineering/blob/v0.14.0/CHANGELOG.md).
+[changelog](https://github.com/noru-tech/noru-grc-engineering/blob/v0.15.0/CHANGELOG.md).
 
 ## Support and contributing
 
 The action is built and tested in
 [`noru-tech/noru-grc-engineering`](https://github.com/noru-tech/noru-grc-engineering), which
-also holds the [contribution guide](https://github.com/noru-tech/noru-grc-engineering/blob/v0.14.0/CONTRIBUTING.md) and the
-[security policy](https://github.com/noru-tech/noru-grc-engineering/blob/v0.14.0/SECURITY.md). Open issues and pull requests there, not in the
+also holds the [contribution guide](https://github.com/noru-tech/noru-grc-engineering/blob/v0.15.0/CONTRIBUTING.md) and the
+[security policy](https://github.com/noru-tech/noru-grc-engineering/blob/v0.15.0/SECURITY.md). Open issues and pull requests there, not in the
 Marketplace repository, whose tree is overwritten on every release.
